@@ -11,7 +11,8 @@
     "cypress:open": "node ../../scripts/cypress open --project .",
     "cypress:run": "node ../../scripts/cypress run --project .",
     "pretest": "npm run check-deps-pre",
-    "watch": "npm run build-for-tests -- --watch --progress"
+    "watch": "npm run build-for-tests -- --watch --progress",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx,.json, ."
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
