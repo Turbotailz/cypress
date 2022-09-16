@@ -37,14 +37,24 @@ const createCypress = () => {
     // It would be ideal to get a window identifier and attach to that window specifically instead of searching all parent windows.
     // This will be implemented for iFrames.
     const findWindow = () => {
+      // if the window we are attaching to is https://app.foobar.com, and we have spec bridges for https://app.foobar.com and https://foobar.com, leverage the https://app.foobar.com spec bridge
+      let mostSpecificWindow: Window | undefined = undefined
+
       for (let index = 0; index < window.parent.frames.length; index++) {
         const frame = window.parent.frames[index]
 
         try {
-          // the AUT would be the frame with a matching origin, but not the same exact href.
-          if (window.location.origin === cors.getOriginPolicy(frame.location.origin)
-              && window.location.href !== frame.location.href) {
-            return frame
+          // the AUT would be the frame with a matching origin policy or super origin policy, but not the same exact href.
+          if (window.location.href !== frame.location.href) {
+            if (window.location.origin === cors.getOriginPolicy(frame.location.origin)) {
+              mostSpecificWindow = frame
+            }
+
+            // if we can't find a specific origin match for the spec bridge, see if window matches the superDomainOriginPolicy.
+            // In the case no exact origin matches, leverage the spec bridge that matches the super domain origin policy.
+            if (!mostSpecificWindow && window.location.origin === cors.getSuperDomainOriginPolicy(frame.location.origin)) {
+              mostSpecificWindow = frame
+            }
           }
         } catch (error) {
           // Catch DOMException: Blocked a frame from accessing a cross-origin frame.
@@ -54,11 +64,12 @@ const createCypress = () => {
         }
       }
 
-      return undefined
+      return mostSpecificWindow
     }
 
     const autWindow = findWindow()
 
+    debugger
     if (autWindow) {
       attachToWindow(autWindow)
     }
@@ -185,7 +196,6 @@ const attachToWindow = (autWindow: Window) => {
       // The before unload event is propagated to primary through code injected into the AUT.
 
       cy.isStable(false, 'beforeunload')
-
       cy.Cookies.setInitial()
 
       cy.resetTimer()

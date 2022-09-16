@@ -249,7 +249,7 @@ describe('errors', () => {
   it('never calls cy.origin', { defaultCommandTimeout: 50 }, (done) => {
     cy.on('fail', (err) => {
       expect(err.message).to.include(`Timed out retrying after 50ms:`)
-      expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://foobar.com:3500\`.`)
+      expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://www.foobar.com:3500\`.`)
       expect(err.message).to.include(`This commonly happens when you have either not navigated to the expected origin or have navigated away unexpectedly.`)
       //  make sure that the secondary origin failures do NOT show up as spec failures or AUT failures
       expect(err.message).not.to.include(`The following error originated from your test code, not from Cypress`)
@@ -288,7 +288,7 @@ describe('errors', () => {
   it('redirects to the wrong cross-origin', { defaultCommandTimeout: 50 }, (done) => {
     cy.on('fail', (err) => {
       expect(err.message).to.include(`Timed out retrying after 50ms:`)
-      expect(err.message).to.include(`The command was expected to run against origin \`http://idp.com:3500\` but the application is at origin \`http://foobar.com:3500\`.`)
+      expect(err.message).to.include(`The command was expected to run against origin \`http://idp.com:3500\` but the application is at origin \`http://www.foobar.com:3500\`.`)
       expect(err.message).to.include(`This commonly happens when you have either not navigated to the expected origin or have navigated away unexpectedly.`)
       //  make sure that the secondary origin failures do NOT show up as spec failures or AUT failures
       expect(err.message).not.to.include(`The following error originated from your test code, not from Cypress`)
@@ -312,7 +312,7 @@ describe('errors', () => {
   it('never returns to the primary origin', { defaultCommandTimeout: 50 }, (done) => {
     cy.on('fail', (err) => {
       expect(err.message).to.include(`Timed out retrying after 50ms:`)
-      expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://idp.com:3500\`.`)
+      expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://www.idp.com:3500\`.`)
       //  make sure that the secondary origin failures do NOT show up as spec failures or AUT failures
       expect(err.message).not.to.include(`The following error originated from your test code, not from Cypress`)
       expect(err.message).not.to.include(`The following error originated from your application code, not from Cypress`)
@@ -334,7 +334,7 @@ describe('errors', () => {
   it('redirects to an unexpected cross-origin', { defaultCommandTimeout: 50 }, (done) => {
     cy.on('fail', (err) => {
       expect(err.message).to.include(`Timed out retrying after 50ms:`)
-      expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://foobar.com:3500\`.`)
+      expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://www.foobar.com:3500\`.`)
       //  make sure that the secondary origin failures do NOT show up as spec failures or AUT failures
       expect(err.message).not.to.include(`The following error originated from your test code, not from Cypress`)
       expect(err.message).not.to.include(`The following error originated from your application code, not from Cypress`)
@@ -359,7 +359,7 @@ describe('errors', () => {
   it('redirects to an unexpected cross-origin and calls another command in the cy.origin command', { pageLoadTimeout: 5000, defaultCommandTimeout: 50 }, (done) => {
     cy.on('fail', (err) => {
       expect(err.message).to.include(`Timed out retrying after 50ms:`)
-      expect(err.message).to.include(`The command was expected to run against origin \`http://idp.com:3500\` but the application is at origin \`http://foobar.com:3500\`.`)
+      expect(err.message).to.include(`The command was expected to run against origin \`http://idp.com:3500\` but the application is at origin \`http://www.foobar.com:3500\`.`)
       //  make sure that the secondary origin failures do NOT show up as spec failures or AUT failures
       expect(err.message).not.to.include(`The following error originated from your test code, not from Cypress`)
       expect(err.message).not.to.include(`The following error originated from your application code, not from Cypress`)
@@ -431,7 +431,7 @@ describe('errors', () => {
     it('times out in cy.origin with foobar spec bridge undefined', { defaultCommandTimeout: 50 }, (done) => {
       cy.on('fail', (err) => {
         expect(err.message).to.include(`Timed out retrying after 50ms:`)
-        expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://foobar.com:3500\`.`)
+        expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://www.foobar.com:3500\`.`)
         //  make sure that the secondary origin failures do NOT show up as spec failures or AUT failures
         expect(err.message).not.to.include(`The following error originated from your test code, not from Cypress`)
         expect(err.message).not.to.include(`The following error originated from your application code, not from Cypress`)
@@ -478,7 +478,7 @@ describe('errors', () => {
     it('times out in cy.origin with foobar spec bridge defined', { defaultCommandTimeout: 50 }, (done) => {
       cy.on('fail', (err) => {
         expect(err.message).to.include(`Timed out retrying after 50ms:`)
-        expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://foobar.com:3500\`.`)
+        expect(err.message).to.include(`The command was expected to run against origin \`http://localhost:3500\` but the application is at origin \`http://www.foobar.com:3500\`.`)
         //  make sure that the secondary origin failures do NOT show up as spec failures or AUT failures
         expect(err.message).not.to.include(`The following error originated from your test code, not from Cypress`)
         expect(err.message).not.to.include(`The following error originated from your application code, not from Cypress`)

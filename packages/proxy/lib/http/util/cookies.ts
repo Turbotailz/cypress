@@ -23,8 +23,8 @@ interface RequestDetails {
 export const areUrlsSameSite = (url1: string, url2: string) => {
   if (!url1 || !url2) return false
 
-  const { port: port1, ...parsedUrl1 } = cors.parseUrlIntoDomainTldPort(url1)
-  const { port: port2, ...parsedUrl2 } = cors.parseUrlIntoDomainTldPort(url2)
+  const { port: port1, subdomain: _unused1, ...parsedUrl1 } = cors.parseUrlIntoHostProtocolDomainTldPort(url1)
+  const { port: port2, subdomain: _unused2, ...parsedUrl2 } = cors.parseUrlIntoHostProtocolDomainTldPort(url2)
 
   // If HTTPS, ports NEED to match. Otherwise, HTTP ports can be different and are same origin
   const doPortsPassSameSchemeCheck = port1 !== port2 ? (port1 !== '443' && port2 !== '443') : true

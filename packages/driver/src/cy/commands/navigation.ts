@@ -261,9 +261,9 @@ const stabilityChanged = async (Cypress, state, config, stable) => {
     return
   }
 
-  // bail if we dont have a runnable
+  // bail if we don't have a runnable
   // because beforeunload can happen at any time
-  // we may no longer be testing and thus dont
+  // we may no longer be testing and thus don't
   // want to fire a new loading event
   // TODO
   // this may change in the future since we want
@@ -1082,10 +1082,11 @@ export default (Commands, Cypress, cy, state, config) => {
 
           remote = $Location.create(url)
 
-          // if the origin currently matches
+          // if the parent origin currently matches
           // or if we have previously visited a location or are a spec bridge
           // then go ahead and change the iframe's src
-          if (remote.originPolicy === existing.originPolicy
+          // we go off the superDomainOriginPolicy policy as we can interact with subdomains based document.domain set to the superdomain
+          if (remote.superDomainOriginPolicy === existing.superDomainOriginPolicy
             || ((previouslyVisitedLocation || Cypress.isCrossOriginSpecBridge) && Cypress.config('experimentalSessionAndOrigin'))
           ) {
             if (!previouslyVisitedLocation) {

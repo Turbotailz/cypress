@@ -33,7 +33,7 @@ describe('cy.origin', () => {
   })
 
   describe('async attach', () => {
-    it('attaches to an origin at any time', () => {
+    it.only('attaches to an origin at any time', () => {
       cy.visit('/fixtures/auth/index.html')
       // Visit a cross origin page
       cy.visit('http://www.idp.com:3500/fixtures/auth/index.html')

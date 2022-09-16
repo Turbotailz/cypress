@@ -68,7 +68,8 @@ export class RemoteStates {
   }
 
   isPrimaryOrigin (url: string): boolean {
-    return this.primaryOriginKey === cors.getOriginPolicy(url)
+    //TODO: I think this might only have to be cors.getSuperDomainOriginPolicy(url) since we only push superDomainPolicies onto the stack
+    return this.primaryOriginKey === cors.getOriginPolicy(url) || this.primaryOriginKey === cors.getSuperDomainOriginPolicy(url)
   }
 
   reset () {
@@ -90,7 +91,7 @@ export class RemoteStates {
 
     if (_.isString(urlOrState)) {
       const remoteOrigin = uri.origin(urlOrState)
-      const remoteProps = cors.parseUrlIntoDomainTldPort(remoteOrigin)
+      const remoteProps = cors.parseUrlIntoHostProtocolDomainTldPort(remoteOrigin)
 
       if ((urlOrState === '<root>') || !fullyQualifiedRe.test(urlOrState)) {
         state = {
@@ -115,7 +116,7 @@ export class RemoteStates {
       state = urlOrState
     }
 
-    const remoteOriginPolicy = cors.getOriginPolicy(state.origin)
+    const remoteOriginPolicy = cors.getSuperDomainOriginPolicy(state.origin)
 
     this.currentOriginKey = remoteOriginPolicy
 

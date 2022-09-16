@@ -29,6 +29,7 @@ export interface LocationObject {
   protocol: string
   search: string
   originPolicy: string
+  superDomainOriginPolicy: string
   superDomain: string
   toString: () => string
 }
@@ -109,6 +110,10 @@ export class $Location {
     return cors.getOriginPolicy(this.remote.href)
   }
 
+  getSuperDomainOriginPolicy () {
+    return cors.getSuperDomainOriginPolicy(this.remote.href)
+  }
+
   getSuperDomain () {
     return cors.getSuperDomain(this.remote.href)
   }
@@ -126,6 +131,7 @@ export class $Location {
       host: this.getHost(),
       hostname: this.getHostName(),
       origin: this.getOrigin(),
+      superDomainOriginPolicy: this.getSuperDomainOriginPolicy(),
       pathname: this.getPathName(),
       port: this.getPort(),
       protocol: this.getProtocol(),
