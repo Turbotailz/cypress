@@ -135,7 +135,7 @@ describe('http/request-middleware', () => {
         },
         getAUTUrl: sinon.stub().returns('http://localhost:8080'),
         remoteStates: {
-          isPrimaryOrigin: sinon.stub().returns(false),
+          isPrimarySuperDomainOrigin: sinon.stub().returns(false),
         },
         req: {
           headers: {
@@ -159,7 +159,7 @@ describe('http/request-middleware', () => {
         },
         getAUTUrl: sinon.stub().returns('http://localhost:8080'),
         remoteStates: {
-          isPrimaryOrigin: sinon.stub().returns(false),
+          isPrimarySuperDomainOrigin: sinon.stub().returns(false),
         },
         getCredentialLevelOfRequest: sinon.stub().returns({}),
         req: {
@@ -184,7 +184,7 @@ describe('http/request-middleware', () => {
         },
         getAUTUrl: sinon.stub().returns('http://localhost:8080'),
         remoteStates: {
-          isPrimaryOrigin: sinon.stub().returns(false),
+          isPrimarySuperDomainOrigin: sinon.stub().returns(false),
         },
         getCredentialLevelOfRequest: sinon.stub().returns({}),
         req: {
@@ -208,7 +208,7 @@ describe('http/request-middleware', () => {
         },
         getAUTUrl: sinon.stub().returns('http://localhost:8080'),
         remoteStates: {
-          isPrimaryOrigin: sinon.stub().returns(false),
+          isPrimarySuperDomainOrigin: sinon.stub().returns(false),
         },
         getCredentialLevelOfRequest: sinon.stub().returns({
           resourceType: 'fetch',
@@ -332,7 +332,7 @@ describe('http/request-middleware', () => {
       const ctx = await getContext()
 
       ctx.req.isAUTFrame = false
-      ctx.remoteStates.isPrimaryOrigin.returns(true),
+      ctx.remoteStates.isPrimarySuperDomainOrigin.returns(true),
 
       await testMiddleware([MaybeAttachCrossOriginCookies], ctx)
 
@@ -523,7 +523,7 @@ describe('http/request-middleware', () => {
         getAUTUrl: () => autUrl,
         getCookieJar: () => cookieJar,
         remoteStates: {
-          isPrimaryOrigin: sinon.stub().returns(false),
+          isPrimarySuperDomainOrigin: sinon.stub().returns(false),
         },
         config: { experimentalSessionAndOrigin: true },
         req: {
@@ -542,7 +542,7 @@ describe('http/request-middleware', () => {
 
     it('sets wantsInjection to full when a request is buffered', async () => {
       const buffers = new HttpBuffers()
-      const buffer = { url: 'https://www.cypress.io/', isCrossOrigin: false } as HttpBuffer
+      const buffer = { url: 'https://www.cypress.io/', isCrossSuperDomainOrigin: false } as HttpBuffer
 
       buffers.set(buffer)
 
@@ -562,7 +562,7 @@ describe('http/request-middleware', () => {
 
     it('sets wantsInjection to fullCrossOrigin when a cross origin request is buffered and experimentalSessionAndOrigin=true', async () => {
       const buffers = new HttpBuffers()
-      const buffer = { url: 'https://www.cypress.io/', isCrossOrigin: true } as HttpBuffer
+      const buffer = { url: 'https://www.cypress.io/', isCrossSuperDomainOrigin: true } as HttpBuffer
 
       buffers.set(buffer)
 
@@ -585,7 +585,7 @@ describe('http/request-middleware', () => {
 
     it('sets wantsInjection to full when a cross origin request is buffered and experimentalSessionAndOrigin=false', async () => {
       const buffers = new HttpBuffers()
-      const buffer = { url: 'https://www.cypress.io/', isCrossOrigin: true } as HttpBuffer
+      const buffer = { url: 'https://www.cypress.io/', isCrossSuperDomainOrigin: true } as HttpBuffer
 
       buffers.set(buffer)
 
@@ -608,7 +608,7 @@ describe('http/request-middleware', () => {
 
     it('wantsInjection is not set when the request is not buffered', async () => {
       const buffers = new HttpBuffers()
-      const buffer = { url: 'https://www.cypress.io/', isCrossOrigin: true } as HttpBuffer
+      const buffer = { url: 'https://www.cypress.io/', isCrossSuperDomainOrigin: true } as HttpBuffer
 
       buffers.set(buffer)
 
