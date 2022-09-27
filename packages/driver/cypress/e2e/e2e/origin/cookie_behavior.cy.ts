@@ -44,6 +44,45 @@ describe('Cookie Behavior with experimentalSessionAndOrigin=true', () => {
     cy.clearCookies()
   })
 
+  context.only('subdomains', () => {
+    it('showcases current behavior', () => {
+      cy.visit('http://www.foobar.com:3500/fixtures/xhr-fetch-requests.html')
+      cy.get('[data-cy="trigger-set-cookie"]').click()
+      cy.get('[data-cy="trigger-fetch"]').click()
+      cy.then(() => {
+        // use the AUT window. notice a single foo=bar cookie is sent
+        return makeRequest(window, '/test-request', 'fetch')
+      })
+
+      cy.setCookie('domain', 'www.foobar.com')
+
+      // we are now technically cross origin and visit a subdomain
+      cy.visit('http://app.foobar.com:3500/fixtures/xhr-fetch-requests.html')
+      cy.get('[data-cy="trigger-set-cookie"]').click()
+      // domain www.foobar.com cookie shows up and it shouldn't. should be NO cookies except for a single foo=bar cookie set on app.foobar.com
+      cy.get('[data-cy="trigger-fetch"]').click()
+      cy.then(() => {
+        // use the AUT window. since this is not on app.foobar.com and on www.foobar.com, this only uses the cookies set in the initial trigger-set-cookie and the domain cookie
+        // which should be attached but is still set on the wrong hostname
+        // this also mimics when an AUT uses window.top.fetch or xhmlHttpRequest to make a request, which would also have incorrect cookies (we see this sometimes with cy.origin)
+        return makeRequest(window, '/test-request', 'fetch')
+      })
+
+      // now set the domain cookie to app.foobar.com, but the domain is set on .foobar.com (which is wrong)
+      // this explains why we set on the super domain as the spec window does NOT change
+      cy.setCookie('domain', 'app.foobar.com')
+
+      // go back to initial origin
+      cy.visit('http://www.foobar.com:3500/fixtures/xhr-fetch-requests.html')
+      // domain app.foobar.com cookie shows up and it shouldn't
+      cy.get('[data-cy="trigger-fetch"]').click()
+      cy.then(() => {
+        // use the AUT window, has app.foobar.com cookie when it shouldn't but has correct initial origin cookie (because spec iframe and top are the same origin)
+        return makeRequest(window, '/test-request', 'fetch')
+      })
+    })
+  })
+
   Object.keys(serverConfig).forEach((scheme) => {
     const sameOriginPort = serverConfig[scheme].sameOriginPort
     const crossOriginPort = serverConfig[scheme].crossOriginPort

@@ -3,6 +3,7 @@
   <body>
     <h1 data-cy="assertion-header">Making XHR and Fetch Requests behind the scenes if fireOnload is true!</h1>
     <button data-cy="trigger-fetch" onclick="triggerFetch('/test-request')"> trigger fetch </button>
+    <button data-cy="trigger-set-cookie" onclick="triggerFetch(`/set-cookie?cookie=foo${Math.floor(Math.random() * 10) + 1}=bar${Math.floor(Math.random() * 10) + 1}; Domain=${window.location.hostname}`)"> trigger set cookie </button>
     <button data-cy="trigger-fetch-with-request-object" onclick="triggerFetchWithRequestObject('/test-request')"> trigger fetch with Request Object</button>
     <button data-cy="trigger-fetch-with-url-object" onclick="triggerFetchWithUrlObject('/test-request')" > trigger fetch with URL Object</button>
     <button data-cy="trigger-fetch-omit" onclick="triggerFetch('/test-request', 'omit')"> trigger fetch w/ omit credentials </button>
