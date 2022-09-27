@@ -776,8 +776,6 @@ describe('src/cy/commands/querying', () => {
         cy.get('#missing-el').should('have.prop', 'foo')
       })
 
-      it('throws when using an alias that does not exist')
-
       it('throws after timing out after a .wait() alias reference', (done) => {
         cy.on('fail', (err) => {
           expect(err.message).to.include('Expected to find element: `getJsonButton`, but never found it.')
@@ -1470,16 +1468,20 @@ space
     })
 
     describe('special characters', () => {
-      _.each('\' " [ ] { } . @ # $ % ^ & * ( ) , ; :'.split(' '), (char) => {
-        it(`finds content by string with character: ${char}`, () => {
+      const specialCharacters = '\' " [ ] { } . @ # $ % ^ & * ( ) , ; :'.split(' ')
+
+      it(`finds content by string with characters`, () => {
+        _.each(specialCharacters, (char) => {
           const span = $(`<span>special char ${char} content</span>`).appendTo(cy.$$('body'))
 
           cy.contains('span', char).then(($span) => {
             expect($span.get(0)).to.eq(span.get(0))
           })
         })
+      })
 
-        it(`finds content by regex with character: ${char}`, () => {
+      it(`finds content by regex with characters`, () => {
+        _.each(specialCharacters, (char) => {
           const span = $(`<span>special char ${char} content</span>`).appendTo(cy.$$('body'))
 
           cy.contains('span', new RegExp(_.escapeRegExp(char))).then(($span) => {

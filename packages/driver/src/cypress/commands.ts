@@ -4,6 +4,8 @@ import { addCommand as addNetstubbingCommand } from '../cy/net-stubbing'
 import $errUtils from './error_utils'
 import $stackUtils from './stack_utils'
 
+import type { QueryFunction } from './utils'
+
 const PLACEHOLDER_COMMANDS = ['mount', 'hover']
 
 const builtInCommands = [
@@ -150,8 +152,12 @@ export default {
         return cy.addCommand(overridden)
       },
 
-      addQuery (name, fn) {
-        if (name !== 'get' && cy[name]) {
+      _addQuery (name: string, fn: () => QueryFunction) {
+        if (reservedCommandNames.has(name)) {
+          internalError('miscellaneous.reserved_command_query', name)
+        }
+
+        if (cy[name]) {
           internalError('miscellaneous.invalid_new_query', name)
         }
 
@@ -159,11 +165,11 @@ export default {
           builtInCommandNames[name] = true
         }
 
-        cy.addQuery({ name, fn })
+        cy._addQuery({ name, fn })
       },
 
-      overwriteQuery (name, fn) {
-        cy.addQuery({ name, fn })
+      _overwriteQuery (name, fn) {
+        cy._addQuery({ name, fn })
       },
     }
 

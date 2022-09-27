@@ -503,7 +503,7 @@ describe('driver/src/cypress/cy', () => {
         done()
       })
 
-      Cypress.Commands.overwriteQuery('aQuery', () => Promise.resolve())
+      Cypress.Commands._overwriteQuery('aQuery', () => Promise.resolve())
       cy.aQuery()
     })
 
@@ -513,7 +513,7 @@ describe('driver/src/cypress/cy', () => {
         done()
       })
 
-      Cypress.Commands.overwriteQuery('aQuery', () => 1)
+      Cypress.Commands._overwriteQuery('aQuery', () => 1)
       cy.aQuery()
     })
 
@@ -523,7 +523,7 @@ describe('driver/src/cypress/cy', () => {
         done()
       })
 
-      Cypress.Commands.overwriteQuery('aQuery', () => cy.visit('/'))
+      Cypress.Commands._overwriteQuery('aQuery', () => cy.visit('/'))
       cy.aQuery()
     })
 
@@ -539,13 +539,13 @@ describe('driver/src/cypress/cy', () => {
 
       cy.on('log:added', (attrs, log) => logs.push(log))
 
-      Cypress.Commands.overwriteQuery('aQuery', () => {
+      Cypress.Commands._overwriteQuery('aQuery', () => {
         cy.now('get', 'body')
 
         return cy.now('get', 'button')
       })
 
-      Cypress.Commands.overwriteQuery('bQuery', () => cy.now('aQuery'))
+      Cypress.Commands._overwriteQuery('bQuery', () => cy.now('aQuery'))
 
       cy.aQuery().should('have.length', 24)
       cy.then(() => {

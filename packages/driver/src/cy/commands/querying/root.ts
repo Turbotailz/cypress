@@ -1,5 +1,5 @@
 export default (Commands, Cypress, cy, state) => {
-  Commands.addQuery('root', function root (options: Partial<Cypress.Loggable & Cypress.Timeoutable> = {}) {
+  Commands._addQuery('root', function root (options: Partial<Cypress.Loggable & Cypress.Timeoutable> = {}) {
     const log = options.log !== false && Cypress.log({
       timeout: options.timeout,
     })
@@ -7,6 +7,7 @@ export default (Commands, Cypress, cy, state) => {
     cy.state('current').set('timeout', options.timeout)
 
     return () => {
+      cy.ensureCommandCanCommunicateWithAUT()
       const $el = state('withinSubject') || cy.$$('html')
 
       log && log.set({

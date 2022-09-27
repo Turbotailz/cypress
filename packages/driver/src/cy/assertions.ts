@@ -104,10 +104,6 @@ export const create = (Cypress: ICypress, cy: $Cy) => {
     return assertions
   }
 
-  const injectAssertionFns = (cmds) => {
-    return _.map(cmds, injectAssertion)
-  }
-
   const injectAssertion = (cmd) => {
     return ((subject) => {
       // set assertions to itself or empty array
@@ -242,6 +238,7 @@ export const create = (Cypress: ICypress, cy: $Cy) => {
     ensureExistenceFor?: 'subject' | 'dom' | boolean
     onFail?: (err?, isDefaultAssertionErr?: boolean, cmds?: any[]) => void
     onRetry?: () => any
+    subjectFn?: () => any
   }
 
   return {
@@ -283,7 +280,7 @@ export const create = (Cypress: ICypress, cy: $Cy) => {
       }
 
       const determineEl = ($el, subject) => {
-        // prefer $el unless it is strickly undefined
+        // prefer $el unless it is strictly undefined
         if (!_.isUndefined($el)) {
           return $el
         }
@@ -342,10 +339,19 @@ export const create = (Cypress: ICypress, cy: $Cy) => {
         }
 
         if (_.isFunction(onRetry)) {
+          //@ts-expect-error
           return cy.retry(onRetry, options)
         }
 
         return
+      }
+
+      if (callbacks.subjectFn) {
+        try {
+          subject = callbacks.subjectFn()
+        } catch (err) {
+          return onFailFn(err)
+        }
       }
 
       // bail if we have no assertions and apply
@@ -380,7 +386,7 @@ export const create = (Cypress: ICypress, cy: $Cy) => {
         return assertFn.apply(this, args.concat(true) as any)
       }
 
-      const fns = injectAssertionFns(cmds)
+      const fns = _.map(cmds, injectAssertion)
 
       // TODO: remove any when the type of subject, the first argument of this function is specified.
       const subjects: any[] = []
